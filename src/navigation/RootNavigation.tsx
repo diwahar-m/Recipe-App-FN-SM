@@ -7,8 +7,8 @@ import RecipeDetailScreen from "../screens/RecipeDetailScreen";
 
 export type RootStackParamsList = {
     Login : undefined,
-    Signup: undefined, 
-    Home: undefined, 
+    Signup: undefined,
+    Home: undefined,
     RecipeDetail: {recipeId: string}
 }
 
@@ -24,4 +24,4 @@ const RootNavigation : React.FC = () => {
     </Stack.Navigator>
 }
 
-export default RootNavigation;
+export default RootNavigation
