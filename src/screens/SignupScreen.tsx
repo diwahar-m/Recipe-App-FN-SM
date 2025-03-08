@@ -1,8 +1,9 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { RootStackParamsList } from "../navigation/RootNavigation";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { AuthContext } from "../context/AuthContext";
 
 type SignUpScreenNavigationProp = NativeStackNavigationProp<RootStackParamsList, "Signup">
 
@@ -15,9 +16,21 @@ const SignupScreen : React.FC<SignUpScreenProps> = ({navigation}) => {
     const [email, setEmail] = useState('');
     const [password, setPassword]  = useState('');
 
+    const {signUp} = useContext(AuthContext)
+
 
     const handleSignUp= async()=> {
-
+        if(email && password){
+            const success = await signUp(email, password)
+            if(success){
+                // 
+                Alert.alert('Success', 'Account created successfully !, please login')
+            }else{
+                 Alert.alert('Sign up failed', 'Please try again with a different email')
+            }
+        }else {
+            Alert.alert('Invalid input', 'Please try both email & password')
+        }
     }
 
 
