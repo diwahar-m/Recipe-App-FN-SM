@@ -1,5 +1,6 @@
 import { createContext, ReactNode, useState } from "react";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const API_URL = 'http://10.0.2.2:5000';
  
@@ -38,7 +39,24 @@ export const AuthProvider : React.FC<{children:  ReactNode}> = ({children}) => {
         }
     }
     const signIn = async(email: string, password: string): Promise<boolean> => {
-        return true
+         try{
+            const result = await axios.post(`${API_URL}/api/auth/login`, {email, password});
+            const {token, userId, success} = result?.data;
+            if(success){
+                await AsyncStorage.setItem('token', token);
+                setToken(token);
+                await AsyncStorage.setItem('userId', userId);
+                setUserId(userId);
+                return true;
+            } else return false
+
+        }catch(err){
+            console.log(err);
+            if(axios.isAxiosError(err)){
+                console.log('Error Details', err?.response?.data)
+            }
+            return false;
+        }
     }
  
     const signOut = async(): Promise<void> => {
