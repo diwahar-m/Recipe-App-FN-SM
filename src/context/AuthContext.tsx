@@ -1,7 +1,6 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { HeaderStyleInterpolators } from "@react-navigation/stack";
 import { ActivityIndicator } from "react-native";
 
 const API_URL = 'http://10.0.2.2:5000';
@@ -52,9 +51,6 @@ export const AuthProvider : React.FC<{children:  ReactNode}> = ({children}) => {
     useEffect(()=> {
         checkAuth()
     })
-
-
-
 
     const signUp = async(email: string, password: string): Promise<boolean> => {
         console.log(email, password)
