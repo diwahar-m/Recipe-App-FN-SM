@@ -1,11 +1,12 @@
-import { useContext, useState } from "react";
-import { View, Text, Button, Alert, StyleSheet, TouchableOpacity, Modal } from "react-native";
+import { useContext, useEffect, useState } from "react";
+import { View, Text, Button, Alert, StyleSheet, TouchableOpacity, Modal, FlatList } from "react-native";
 import { AuthContext } from "../context/AuthContext";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamsList } from "../navigation/RootNavigation";
 import { TextInput } from "react-native-gesture-handler";
 import CreateRecipeForm from "../components/CreateRecipeForm";
 import { Recipe, RecipeContext } from "../context/RecipeContext";
+import RecipeItem from "../components/RecipeItem";
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamsList, "Home">
 
@@ -16,9 +17,13 @@ interface HomeScreenProps {
 const HomeScreen : React.FC<HomeScreenProps> = ({navigation}) => {
 
     const {signOut}  = useContext(AuthContext);
-    const {createRecipe} = useContext(RecipeContext)
+    const {createRecipe, fetchRecipes, recipes} = useContext(RecipeContext)
     const [showModal,setShowModal] = useState(false); 
     const [searchQuery, setSearchQuery] = useState('');
+
+    useEffect(()=> {
+        fetchRecipes()
+    })
 
 
     const handleLogout =()=> {
@@ -40,6 +45,7 @@ const HomeScreen : React.FC<HomeScreenProps> = ({navigation}) => {
     const handleOnCreateRecipeButtonSubmit = async(newRecipe: Omit<Recipe, '_id' | 'createdBy' | 'createdAt'>)=> {
         console.log(newRecipe);
         createRecipe(newRecipe);
+        setShowModal(false);
     }
 
     return <View style={styles.container}>
@@ -54,6 +60,11 @@ const HomeScreen : React.FC<HomeScreenProps> = ({navigation}) => {
                 </TouchableOpacity>
             </View>
             {/* List of recipes */}
+            <FlatList 
+              data={recipes}
+              renderItem={(item)=> <RecipeItem recipe={item}/>}
+            
+            />
             {/* Modal to add Recipe */}
             <Modal
               visible={showModal} 
