@@ -1,6 +1,8 @@
-import { createContext, ReactNode, useState } from "react";
+import { createContext, ReactNode, useEffect, useState } from "react";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { HeaderStyleInterpolators } from "@react-navigation/stack";
+import { ActivityIndicator } from "react-native";
 
 const API_URL = 'http://10.0.2.2:5000';
  
@@ -11,7 +13,8 @@ interface AuthContextData {
     signUp: (email: string, password: string) => Promise<boolean>;
     signIn: (email: string, password: string) => Promise<boolean>;
     signOut: () => Promise<void>;
-
+    isAuthenticated: boolean;
+    checkAuth: ()=> Promise<boolean>
 }
 
 export const AuthContext = createContext<AuthContextData>({} as AuthContextData) 
@@ -20,7 +23,38 @@ export const AuthProvider : React.FC<{children:  ReactNode}> = ({children}) => {
    
     const [token, setToken]  = useState<string | null>(null)
     const [userId, setUserId] = useState<string | null>(null)
-    const [isLoading, seIsLoading]= useState(true)
+    const [isLoading, seIsLoading]= useState(true);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+
+    const checkAuth = async() => {
+        try {
+             const storedId = await AsyncStorage.getItem('userId');
+            const storedToken = await AsyncStorage.getItem('token');
+
+        if(storedId && storedToken) {
+            setUserId(storedId);
+            setToken(storedToken);
+            setIsAuthenticated(true);
+
+            return true;
+        }
+        return false
+             
+        } catch(err){
+            console.log(err);
+            return false;
+        } finally {
+            seIsLoading(false)
+        }  
+    }
+
+    useEffect(()=> {
+        checkAuth()
+    })
+
+
+
 
     const signUp = async(email: string, password: string): Promise<boolean> => {
         console.log(email, password)
@@ -47,6 +81,7 @@ export const AuthProvider : React.FC<{children:  ReactNode}> = ({children}) => {
                 setToken(token);
                 await AsyncStorage.setItem('userId', userId);
                 setUserId(userId);
+                setIsAuthenticated(true);
                 return true;
             } else return false
 
@@ -60,9 +95,19 @@ export const AuthProvider : React.FC<{children:  ReactNode}> = ({children}) => {
     }
  
     const signOut = async(): Promise<void> => {
+        try {
+            await AsyncStorage.removeItem('userId');
+            await AsyncStorage.removeItem('token');
+            setUserId(null);
+            setToken(null);
+            setIsAuthenticated(false);
 
+        } catch(err){
+            console.log(err)
+        }
     }
-   
-   
-    return <AuthContext.Provider value={{token, userId, isLoading, signUp, signIn, signOut}}>{children}</AuthContext.Provider>
+
+    if(isLoading)  return <ActivityIndicator  size={'large'} color={'red'}/>
+    
+    return <AuthContext.Provider value={{token, userId, isLoading, signUp, signIn, signOut, isAuthenticated, checkAuth}}>{children}</AuthContext.Provider>
 }

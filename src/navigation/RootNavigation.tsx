@@ -1,9 +1,12 @@
 
 
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createNativeStackNavigator, NativeStackNavigationProp } from "@react-navigation/native-stack";
 import LoginScreen from "../screens/LoginScreen";
 import SignupScreen from "../screens/SignupScreen";
 import RecipeDetailScreen from "../screens/RecipeDetailScreen";
+import { useNavigation } from "@react-navigation/native";
+import { useContext, useEffect } from "react";
+import { AuthContext } from "../context/AuthContext";
 
 export type RootStackParamsList = {
     Login : undefined,
@@ -13,9 +16,32 @@ export type RootStackParamsList = {
 }
 
 const Stack = createNativeStackNavigator<RootStackParamsList>()
+type NavigationProp = NativeStackNavigationProp<RootStackParamsList> 
+
 
 
 const RootNavigation : React.FC = () => {
+
+    const navigation = useNavigation<NavigationProp>()
+    const{isAuthenticated, isLoading} = useContext(AuthContext);
+
+
+    useEffect(()=> {
+        if(!isLoading){  
+            if(isAuthenticated) {
+                navigation.reset({
+                    index: 0, 
+                    routes: [{name: 'Home'}]
+                })
+            } else {
+                navigation.reset({
+                    index: 0, 
+                    routes: [{name: 'Login'}]
+                })
+            }
+        }
+
+    },[isLoading, isAuthenticated, navigation])
 
     return <Stack.Navigator initialRouteName="Login">
         <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}}/>

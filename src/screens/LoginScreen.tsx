@@ -4,10 +4,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useContext, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 
-
 export type LoginScreenNavigationProp = NativeStackNavigationProp<RootStackParamsList, "Login">
-
-
 interface LoginScreenProps {
     navigation: LoginScreenNavigationProp
 }
@@ -17,7 +14,6 @@ const LoginScreen : React.FC<LoginScreenProps> = ({navigation}) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const {signIn} = useContext(AuthContext);
-
     const handleLogIn =async() => {
         if(email && password){
             const result = await signIn(email, password);
@@ -34,7 +30,7 @@ const LoginScreen : React.FC<LoginScreenProps> = ({navigation}) => {
             <TextInput 
               placeholder="Email" 
               keyboardType="email-address" 
-              autoCapitalize="none"  
+              autoCapitalize="none"
               style={styles.input}
               value={email}
               onChangeText={setEmail}
