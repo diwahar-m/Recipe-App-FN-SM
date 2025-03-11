@@ -15,6 +15,7 @@ interface RecipeContextData {
     recipes?: Recipe[], 
     createRecipe?: (recipe: Omit<Recipe, '_id' | 'createdBy' | 'createdAt'>)=> Promise<void>
     fetchRecipes: ()=> Promise<void>
+    fetchSingleRecipe: (id:string)=> Promise<Recipe>
 } 
 
 export const RecipeContext = createContext<RecipeContextData>({} as RecipeContextData) 
@@ -56,5 +57,20 @@ export const RecipeProvider : React.FC<{children: ReactNode}> = ({children}) => 
         }
     }
 
-    <RecipeContext.Provider value={{recipes, createRecipe, fetchRecipes}}>{children}</RecipeContext.Provider>
+    const fetchSingleRecipe = async(id:string): Promise<Recipe> => {
+        try {
+            const result = await axios.get(`${API_URL}/api/recipe/get/:${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            } )
+
+            return result.data.data
+        } catch(err) {
+            console.log(err);
+            throw err
+        }
+    }
+
+    <RecipeContext.Provider value={{recipes, createRecipe, fetchRecipes, fetchSingleRecipe}}>{children}</RecipeContext.Provider>
 }

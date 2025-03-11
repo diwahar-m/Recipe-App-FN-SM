@@ -16,7 +16,7 @@ interface HomeScreenProps {
 
 const HomeScreen : React.FC<HomeScreenProps> = ({navigation}) => {
 
-    const {signOut}  = useContext(AuthContext);
+    const {signOut, userId}  = useContext(AuthContext);
     const {createRecipe, fetchRecipes, recipes} = useContext(RecipeContext)
     const [showModal,setShowModal] = useState(false); 
     const [searchQuery, setSearchQuery] = useState('');
@@ -48,6 +48,10 @@ const HomeScreen : React.FC<HomeScreenProps> = ({navigation}) => {
         setShowModal(false);
     }
 
+    const handleDeleteRecipe =(currentRecipeId: string)=> {
+        
+    }
+
     return <View style={styles.container}>
             {/* Header */}
             <View style={styles.header}>
@@ -62,8 +66,14 @@ const HomeScreen : React.FC<HomeScreenProps> = ({navigation}) => {
             {/* List of recipes */}
             <FlatList 
               data={recipes}
-              renderItem={(item)=> <RecipeItem recipe={item}/>}
-            
+              renderItem={(item)=> 
+                <RecipeItem
+                 recipe={item} 
+                 currentUserId={userId}
+                 onRecipeItemDelete={()=> handleDeleteRecipe(item._id)}
+                 onPressRecipeItem={()=> navigation.navigate('RecipeDetails', {recipeId: item._id})}
+                />}
+              
             />
             {/* Modal to add Recipe */}
             <Modal

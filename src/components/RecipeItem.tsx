@@ -4,21 +4,27 @@ import { Recipe } from "../context/RecipeContext"
 
 interface RecipeProps {
     recipe: Recipe
+    onPressRecipeItem: ()=> void
+    currentUserId : string | null;
+    onRecipeItemDelete: ()=> void
 }
 
 
-const RecipeItem: React.FC<RecipeProps> = ({recipe}) => {
+const RecipeItem: React.FC<RecipeProps> = ({recipe, onPressRecipeItem, currentUserId, onRecipeItemDelete}) => {
     console.log(recipe);
 
-    return <TouchableOpacity style={styles.card}>
+    return <TouchableOpacity style={styles.card} onPress={onPressRecipeItem}>
         <View  style={styles.cardContent}>
             <Text style={styles.title}>{recipe.title}</Text>
             <Text style={styles.description} numberOfLines={2}>{recipe.description}</Text>
             <Text style={styles.difficulty} numberOfLines={2}>{recipe.difficulty}</Text>
         </View>
-        <TouchableOpacity style={styles.deleteBtn}> 
+        {
+            currentUserId && recipe.createdBy === currentUserId && 
+        (<TouchableOpacity style={styles.deleteBtn} onPress={onRecipeItemDelete}> 
             <Text style={styles.deleteBtnTxt}>Delete</Text>
-        </TouchableOpacity>
+        </TouchableOpacity>)
+         }
 
     </TouchableOpacity>
 
