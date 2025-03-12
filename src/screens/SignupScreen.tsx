@@ -1,6 +1,5 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
-import { TextInput } from "react-native-gesture-handler";
+import { View, Text, StyleSheet, TouchableOpacity, Alert, TextInput } from "react-native";
 import { RootStackParamsList } from "../navigation/RootNavigation";
 import { useContext, useState } from "react";
 import { AuthContext } from "../context/AuthContext";

@@ -7,6 +7,7 @@ import RecipeDetailScreen from "../screens/RecipeDetailScreen";
 import { useNavigation } from "@react-navigation/native";
 import { useContext, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
+import HomeScreen from "../screens/HomeScreen";
 
 export type RootStackParamsList = {
     Login : undefined,
@@ -44,6 +45,7 @@ const RootNavigation : React.FC = () => {
     },[isLoading, isAuthenticated, navigation])
 
     return <Stack.Navigator initialRouteName="Login">
+        <Stack.Screen name="Home" component={HomeScreen} options={{headerShown: false}}/>
         <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}}/>
         <Stack.Screen name="Signup" component={SignupScreen} options={{headerShown: false}}/>
         <Stack.Screen name="RecipeDetail" component={RecipeDetailScreen} options={{headerShown: false}}/>

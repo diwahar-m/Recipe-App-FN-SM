@@ -18,7 +18,7 @@ const LoginScreen : React.FC<LoginScreenProps> = ({navigation}) => {
         if(email && password){
             const result = await signIn(email, password);
              if(result){
-                navigation.navigate('Home');
+                navigation.navigate("Home");
              }else {
                 Alert.alert('Login Failed', "Please check your credentials and try again!")
              }

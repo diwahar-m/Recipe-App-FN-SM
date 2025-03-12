@@ -1,9 +1,8 @@
 import { useContext, useEffect, useState } from "react";
-import { View, Text, Button, Alert, StyleSheet, TouchableOpacity, Modal, FlatList } from "react-native";
+import { View, Text, Button, Alert, StyleSheet, TouchableOpacity, Modal, FlatList , TextInput} from "react-native";
 import { AuthContext } from "../context/AuthContext";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamsList } from "../navigation/RootNavigation";
-import { TextInput } from "react-native-gesture-handler";
 import CreateRecipeForm from "../components/CreateRecipeForm";
 import { Recipe, RecipeContext } from "../context/RecipeContext";
 import RecipeItem from "../components/RecipeItem";
@@ -22,8 +21,8 @@ const HomeScreen : React.FC<HomeScreenProps> = ({navigation}) => {
     const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(()=> {
-        fetchRecipes()
-    })
+            fetchRecipes()
+    },[])
 
 
     const handleLogout =()=> {
@@ -54,7 +53,7 @@ const HomeScreen : React.FC<HomeScreenProps> = ({navigation}) => {
     }
 
     const filteredRecipes = recipes?.filter(recipeItem => recipeItem.title.toLowerCase().includes(searchQuery.toLowerCase()))
-
+    console.log(filteredRecipes)
     return <View style={styles.container}>
             {/* Header */}
             <View style={styles.header}>

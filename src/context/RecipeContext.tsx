@@ -27,18 +27,16 @@ export const RecipeProvider : React.FC<{children: ReactNode}> = ({children}) => 
     const [recipes, setRecipes] = useState<Recipe[]>([])
     const {token} = useContext(AuthContext)
 
-    const fetchRecipes = async() => {
+    const fetchRecipes = async():Promise<void> => {
         try {
             const result = await axios.get(`${API_URL}/api/recipe/get`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
-
             setRecipes(result?.data)
-
         } catch(err) {
-            console.log(err)
+            console.log(JSON.stringify(err))
         }
     }
 

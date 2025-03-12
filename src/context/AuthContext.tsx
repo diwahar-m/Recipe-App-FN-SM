@@ -3,7 +3,7 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ActivityIndicator } from "react-native";
 
-export const API_URL = 'http://10.0.2.2:5000';
+export const API_URL = 'http://10.0.2.2:3000';
  
 interface AuthContextData {
     token: string | null;
@@ -55,8 +55,10 @@ export const AuthProvider : React.FC<{children:  ReactNode}> = ({children}) => {
     const signUp = async(email: string, password: string): Promise<boolean> => {
         console.log(email, password)
         try{
+            console.log("sss");
             const result = await axios.post(`${API_URL}/api/auth/register`, {email, password});
             console.log(result);
+            console.log(result?.data)
             if(result?.data?.success) return true;
             else return false;
 
